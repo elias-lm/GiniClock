@@ -7,10 +7,11 @@ import gini.apps.giniclock.data.firebase.database.report.FirebaseReport
 import gini.apps.giniclock.data.firebase.database.report.FirebaseReportImpl
 import gini.apps.giniclock.data.firebase.database.user.FirebaseUser
 import gini.apps.giniclock.data.firebase.database.user.FirebaseUserImpl
+import gini.apps.giniclock.ui.Navigator
 import gini.apps.giniclock.ui.screens.MainViewModel
 import gini.apps.giniclock.ui.screens.ReportsRepository
 import gini.apps.giniclock.ui.screens.RootScreenViewModel
-import gini.apps.giniclock.ui.screens.TestViewModel
+import gini.apps.giniclock.ui.screens.TestViewViewModel
 import gini.apps.giniclock.ui.views.ReportViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -19,11 +20,15 @@ import org.koin.dsl.module
 
 val viewModelsModule = module {
 
-    viewModel { params -> RootScreenViewModel(params.get()) }
-    viewModel { MainViewModel(get(), get()) }
+    viewModel { params -> RootScreenViewModel(params.get(), get()) }
+    viewModel { MainViewModel(get(), get(), get()) }
     viewModelOf(::ReportViewModel)
-    viewModelOf(::TestViewModel)
+    viewModelOf(::TestViewViewModel)
 
+}
+
+val services = module {
+    singleOf(::Navigator)
 }
 
 val reposModule = module {
@@ -35,7 +40,7 @@ val reposModule = module {
 val firebaseModule = module {
 
     singleOf(::FirebaseDatabaseManager)
-    single<FirebaseUser> { FirebaseUserImpl()}
+    single<FirebaseUser> { FirebaseUserImpl() }
     single<FirebaseReport> { FirebaseReportImpl() }
     single<FirebaseCompany> { FirebaseCompanyImpl() }
 

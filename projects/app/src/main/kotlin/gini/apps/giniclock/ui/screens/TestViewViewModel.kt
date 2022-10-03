@@ -5,16 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import gini.apps.giniclock.data.firebase.database.FirebaseDatabaseManager
 import gini.apps.giniclock.data.models.Report
+import gini.apps.giniclock.ui.Navigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class TestViewModel(
+class TestViewViewModel(
     //injected by Koin
-    val savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
+    private val navigator: Navigator,
     //injected by Koin module named "firebaseModule" in file "KoinModules.kt"
     private val firebaseDatabaseManager: FirebaseDatabaseManager
 ) : ViewModel() {
+
 
     //surviving configuration change, process death
     val text1display = savedStateHandle.getStateFlow("text1", "Text 1")
@@ -48,5 +51,9 @@ class TestViewModel(
         }
     }
 
+    fun toTimelineScreen() {
+        //if logic than do
+        navigator.navigateTo(ScreenDestinations.Timeline.Graph)
+    }
 
 }

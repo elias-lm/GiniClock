@@ -4,12 +4,13 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import gini.apps.giniclock.ui.theme.MaterialTheme
-import kotlinx.coroutines.flow.asStateFlow
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -20,6 +21,12 @@ fun RootScreen(rootScreenViewModel: RootScreenViewModel) {
     val scaffoldState = rememberScaffoldState()
     val navController = rememberNavController()
 
+    LaunchedEffect("navigation") {
+        rootScreenViewModel.navigator.destination.collect {
+            navController.navigate(it.route)
+        }
+    }
+
     MaterialTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -28,25 +35,35 @@ fun RootScreen(rootScreenViewModel: RootScreenViewModel) {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = rootScreenViewModel.startingScreen.asStateFlow().value.toString()
-//                when (rootScreenViewModel.startingScreen.asStateFlow().value as ScreenDestinations) {
-//                    ScreenDestinations.Test -> TODO()
-//                    ScreenDestinations.Login -> NavigationDestinations.Login
-//                    ScreenDestinations.Timeline -> NavigationDestinations.Timeline
-//                }
+                startDestination = ScreenDestinations.Test.Graph.route
             ) {
-                composable(route = ScreenDestinations.Test()) {
-                    val testViewModel: TestViewModel =
-                        getViewModel { parametersOf(rootScreenViewModel.savedStateHandle) }
-                    TestView(testViewModel)
+                navigation(
+                    startDestination = ScreenDestinations.Test.Main.route,
+                    route = ScreenDestinations.Test.Graph.route
+                ) {
+                    composable(route = ScreenDestinations.Test.Main.route) {
+                        val testViewViewModel: TestViewViewModel =
+                            getViewModel { parametersOf(rootScreenViewModel.savedStateHandle) }
+                        TestView(testViewViewModel)
+                    }
                 }
-                composable(route = ScreenDestinations.Login()) {
+                navigation(
+                    startDestination = ScreenDestinations.Login.Main.route,
+                    route = ScreenDestinations.Login.Graph.route
+                ) {
+                    composable(route = ScreenDestinations.Login.Main.route) {
 
+                    }
                 }
-                composable(route = ScreenDestinations.Timeline()) {
-                    val mainViewModel: MainViewModel =
-                        getViewModel { parametersOf(rootScreenViewModel.savedStateHandle) }
-                    MainView(mainViewModel)
+                navigation(
+                    startDestination = ScreenDestinations.Timeline.Main.route,
+                    route = ScreenDestinations.Timeline.Graph.route
+                ) {
+                    composable(route = ScreenDestinations.Timeline.Main.route) {
+                        val mainViewModel: MainViewModel =
+                            getViewModel { parametersOf(rootScreenViewModel.savedStateHandle) }
+                        MainView(mainViewModel)
+                    }
                 }
             }
         }

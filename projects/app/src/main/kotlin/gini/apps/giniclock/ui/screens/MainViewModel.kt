@@ -9,9 +9,11 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import gini.apps.giniclock.data.Report
+import gini.apps.giniclock.ui.Navigator
 
 class MainViewModel(
      val savedStateHandle: SavedStateHandle,
+     val navigator: Navigator,
     private val reportsRepo: ReportsRepository
 ) : ViewModel() {
 

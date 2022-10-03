@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import gini.apps.giniclock.koin.firebaseModule
 import gini.apps.giniclock.koin.reposModule
+import gini.apps.giniclock.koin.services
 import gini.apps.giniclock.koin.viewModelsModule
 import mad.dev.common.CommonClass
 import org.koin.android.ext.koin.androidContext
@@ -20,7 +21,8 @@ class MainApplication : Application() {
             modules(
                 viewModelsModule,
                 reposModule,
-                firebaseModule
+                firebaseModule,
+                services
             )
 
             CommonClass()
